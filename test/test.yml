@@ -1,0 +1,8 @@
+---
+
+- hosts: all
+  become: True
+
+  roles:
+    # Use our symlink to avoid any cute directory naming issues
+    - role: versity.hostbased-ssh

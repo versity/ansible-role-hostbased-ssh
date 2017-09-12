@@ -1,0 +1,8 @@
+*.swp
+*.swo
+
+.vagrant*
+test/roles
+test/test.retry
+test/ansible_venv
+ansible.log
