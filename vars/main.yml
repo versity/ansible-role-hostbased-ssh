@@ -1,5 +1,4 @@
 ---
 # vars file for sshd
 
-ssh_known_hosts_command: "ssh-keyscan -T 10 -f /root/.shosts"
 ssh_known_hosts_file: "/etc/ssh/ssh_known_hosts"

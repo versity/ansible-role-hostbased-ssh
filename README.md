@@ -11,8 +11,9 @@ None
 Role Variables
 --------------
 
-Current settable vars are the command to collect pub host keys and the path/file that ssh expects the ssh_known_host to be:
-ssh_known_hosts_command: "ssh-keyscan -T 10 -f /root/.shosts"
+Current settable variables are as follows.
+
+File to update with ssh host information:
 ssh_known_hosts_file: "/etc/ssh/ssh_known_hosts"
 
 Dependencies

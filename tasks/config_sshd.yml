@@ -27,6 +27,18 @@
 - name: Make sure the known hosts file exists
   file: "path={{ ssh_known_hosts_file }} state=touch"
 
-- name: Scan the public key
-  shell: "{{ ssh_known_hosts_command}} > {{ ssh_known_hosts_file }}"
+# We are only grabbing the RSA key for each host. So far, that is enough.
+- name: Scan host keys
+  command: "ssh-keyscan -T 10 -t rsa {{ item }}"
+  with_items:
+    - "{{ play_hosts }}"
+  register: ssh_host_keys
+  changed_when: False
 
+- name: Add host keys to known_hosts
+  known_hosts:
+    path: "{{ ssh_known_hosts_file }}"
+    name: "{{ item.item }}"
+    key: "{{ item.stdout }}"
+  with_items:
+    - "{{ ssh_host_keys.results }}"
