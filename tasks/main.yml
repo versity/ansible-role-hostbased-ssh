@@ -11,4 +11,5 @@
 # Configure users that will initiate hostbased ssh
 - include: config_user_ssh.yml
 
+# Allow incoming hostbased ssh
 - include: config_sshd.yml
