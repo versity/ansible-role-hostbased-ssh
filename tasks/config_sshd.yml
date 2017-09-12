@@ -24,6 +24,12 @@
 - name: copy sshd_config to defeat Jumpcloud reverting changes
   command: cp /etc/ssh/sshd_config /etc/ssh/sshd_config.orig
 
+# Required to allow non-root users to enable this
+- name: Enable user hostbased ssh (global ssh_config)
+  lineinfile: dest=/etc/ssh/ssh_config regexp="^{{ item }}" line="{{ item }} yes"
+  with_items:
+    - EnableSSHKeysign
+
 - name: Make sure the known hosts file exists
   file: "path={{ ssh_known_hosts_file }} state=touch"
 

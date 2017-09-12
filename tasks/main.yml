@@ -8,7 +8,7 @@
     - openssh-clients
   when: ansible_os_family == "RedHat"
 
-# tasks file for sshd
-- include: config_root_ssh.yml
+# Configure users that will initiate hostbased ssh
+- include: config_user_ssh.yml
 
 - include: config_sshd.yml

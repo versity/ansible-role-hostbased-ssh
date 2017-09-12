@@ -28,3 +28,11 @@
     - name: Test github.com in ssh_known_hosts
       command: grep -q github.com /etc/ssh/ssh_known_hosts
       changed_when: False
+
+    - name: Test user hostbased ssh
+      command: ssh "{{ play_hosts[0] }}" hostname
+      become: vagrant
+      delegate_to: "{{ item }}"
+      with_items:
+        - "{{ play_hosts }}"
+      changed_when: false

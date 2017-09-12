@@ -16,6 +16,10 @@ Current settable variables are as follows.
 File to update with ssh host information:
 ssh_known_hosts_file: "/etc/ssh/ssh_known_hosts"
 
+Users to configure for hostbased ssh.
+ssh_hostbased_users: ['root', 'vagrant']
+
+
 Dependencies
 ------------
 
