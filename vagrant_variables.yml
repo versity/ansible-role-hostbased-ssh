@@ -1,0 +1,14 @@
+---
+
+# Variables for in-repo testing with VirtualBox
+#
+
+# node parameters
+
+vm_memory: 1024
+vm_cpus: 1
+
+# host/ip information
+
+cluster: "ssh"
+nnodes: 2

@@ -1,0 +1,52 @@
+---
+
+# we use lineinfile to just change the minimum and prevent Jumpcloud from
+# copying a new sshd_config over on our changes.
+- name: fixup sshd_config (value to yes)
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^{{ item }}" line="{{ item }} yes"
+  with_items:
+    - HostbasedAuthentication
+    - UseDNS
+  notify: restart sshd
+
+- name: fixup sshd_config (value to no)
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^{{ item }}" line="{{ item }} no"
+  with_items:
+    - IgnoreRhosts
+  notify: restart sshd
+
+- name: fixup sshd_config (value to without-password)
+  lineinfile: dest=/etc/ssh/sshd_config regexp="^{{ item }}" line="{{ item }} without-password"
+  with_items:
+    - PermitRootLogin
+  notify: restart sshd
+
+- name: copy sshd_config to defeat Jumpcloud reverting changes
+  command: cp /etc/ssh/sshd_config /etc/ssh/sshd_config.orig
+
+# Required to allow non-root users to enable this
+- name: Enable user hostbased ssh (global ssh_config)
+  lineinfile: dest=/etc/ssh/ssh_config regexp="^{{ item }}" line="{{ item }} yes"
+  with_items:
+    - EnableSSHKeysign
+
+- name: Make sure the known hosts file exists
+  file:
+    path: "{{ ssh_known_hosts_file }}"
+    state: file
+
+# We are only grabbing the RSA key for each host. So far, that is enough.
+- name: Scan host keys
+  command: "ssh-keyscan -T 10 -t rsa {{ item }}"
+  with_items:
+    - "{{ play_hosts }}"
+  register: ssh_host_keys
+  changed_when: False
+
+- name: Add host keys to known_hosts
+  known_hosts:
+    path: "{{ ssh_known_hosts_file }}"
+    name: "{{ item.item }}"
+    key: "{{ item.stdout }}"
+  with_items:
+    - "{{ ssh_host_keys.results }}"

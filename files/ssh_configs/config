@@ -1,0 +1,4 @@
+Host *
+    HostbasedAuthentication yes
+    EnableSSHKeysign yes
+    PasswordAuthentication no

@@ -1,0 +1,28 @@
+---
+
+- name: make sure HOME/.ssh dir exists
+  file:
+    path: "~{{ item }}/.ssh"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    state: directory
+    mode: 0700
+  with_items:
+    - "{{ ssh_hostbased_users }}"
+
+- name: copy out roots ssh config files
+  copy:
+    src: ssh_configs/config
+    dest: "~{{ item }}/.ssh/config"
+    owner: "{{ item }}"
+    group: "{{ item }}"
+    mode: 0644
+  with_items:
+    - "{{ ssh_hostbased_users }}"
+
+- name: setup root shosts file
+  template:
+    src: shosts.j2
+    dest: "~{{ item }}/.shosts"
+  with_items:
+    - "{{ ssh_hostbased_users }}"
