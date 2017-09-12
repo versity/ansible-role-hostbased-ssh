@@ -1,0 +1,11 @@
+---
+
+- name: make sure /root/.ssh dir exists
+  file: path=/root/.ssh state=directory owner=root group=root mode=700
+
+- name: copy out roots ssh config files
+  copy: src=ssh_configs/config dest=/root/.ssh/config owner=root group=root mode=644
+
+- name: setup root shosts file
+  template: src=shosts.j2 dest=/root/.shosts
+

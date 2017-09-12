@@ -1,2 +1,14 @@
 ---
-# tasks file for hostbased-ssh
+
+- name: Install Packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - openssh-clients
+  when: ansible_os_family == "RedHat"
+
+# tasks file for sshd
+- include: config_root_ssh.yml
+
+- include: config_sshd.yml
