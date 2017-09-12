@@ -31,7 +31,9 @@
     - EnableSSHKeysign
 
 - name: Make sure the known hosts file exists
-  file: "path={{ ssh_known_hosts_file }} state=touch"
+  file:
+    path: "{{ ssh_known_hosts_file }}"
+    state: file
 
 # We are only grabbing the RSA key for each host. So far, that is enough.
 - name: Scan host keys
