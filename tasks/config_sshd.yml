@@ -37,9 +37,9 @@
 
 # We are only grabbing the RSA key for each host. So far, that is enough.
 - name: Scan host keys
-  command: "ssh-keyscan -T 10 -t rsa {{ item }}"
+  command: "ssh-keyscan -T 10 -t rsa {{ item }} {{hostvars[item]['ansible_nodename']}}"
   with_items:
-    - "{{ play_hosts }}"
+    - "{{ ansible_play_hosts }}"
   register: ssh_host_keys
   changed_when: False
 
@@ -47,6 +47,14 @@
   known_hosts:
     path: "{{ ssh_known_hosts_file }}"
     name: "{{ item.item }}"
+    key: "{{ item.stdout }}"
+  with_items:
+    - "{{ ssh_host_keys.results }}"
+
+- name: Add nodename keys to known_hosts
+  known_hosts:
+    path: "{{ ssh_known_hosts_file }}"
+    name: "{{ hostvars[item.item]['ansible_nodename'] }}"
     key: "{{ item.stdout }}"
   with_items:
     - "{{ ssh_host_keys.results }}"
